@@ -151,3 +151,32 @@ export const getStaticPaths = async () => {
 }
 
 ```
+
+
+# understanding fallback
+
+In some cases we do not want to pre-genearte pages. As those may be less visited pages we want to generate them just when there is a need for them. For such cases we use fallback: true.
+
+We need to also remember that when using fallback: true, data will not be accessible instantly and we need to make a guard case for such case
+
+```js
+const ProductDetail = (props) => {
+    const {productDetailData} = props;
+
+    // When using fallback we need to be prepared for the fact that the data may not be available here
+    if(!productDetailData){
+        return <p>Loading....</p>
+    }
+
+    return (
+    <div>
+        <h1>{productDetailData.title}</h1>
+        <p>{productDetailData.description}</p>
+    </div>
+    )
+}
+```
+
+This is similar to useEffect way of fetching data.
+
+we can also set fallback: 'blocking', this will make ssr wait for page to be generated
