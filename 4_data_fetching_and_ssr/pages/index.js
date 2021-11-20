@@ -1,12 +1,18 @@
 // This is node.js package. Next.js also will strip this from client side bundle. Code will be split for server and client
 import fs from 'fs/promises';
-import path from 'path'
+import path from 'path';
+import Link from 'next/link';
 
 const HomePage = (props) => {
 
+
     return <div>hello from route
         <ul>
-            {props.products.map(product => <li key={product.id}>{product.title}</li>)}
+            {props.products.map(product => {
+            console.log('###',product)
+            return <li key={product.id}>
+                <Link href={`/${product.id}`}>{product.title}</Link>
+            </li>})}
         </ul>
     </div>
 }
@@ -21,6 +27,7 @@ export const getStaticProps = async (context) => {
     const filePath = path.join(process.cwd(), 'data', 'db-1.json')
     const jsonData = await fs.readFile(filePath);
     const data = JSON.parse(jsonData)
+
 
     // This prepares props for the component
     return {

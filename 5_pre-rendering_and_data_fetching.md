@@ -97,11 +97,57 @@ We do this by adding "revalidate" value on our return object in getStaticProps w
 ```js
     return {
             props: {
-                    products: data.products
+                products: data.products
             },
-            revalidate: 10 // this is 10 seconds to re-generate the site
+            revalidate: 10, // this is 10 seconds to re-generate
+            notFound: true, // will return 404 and not normal page. We can use it if i.e some data is lacking
+            redirect: {
+                destination:'https://google.pl'
+            },
+
         }
     }
 ```
 
 for development server, page will be re-generated on each request.
+
+# understanding getStaticPaths for dynamic pages
+
+we will get this error when setting up our dynamic page with fetch
+
+"Error: getStaticPaths is required for dynamic SSG pages and is missing for '/[pid]'.
+Read more: https://nextjs.org/docs/messages/invalid-getstaticpaths-value"
+
+If we have a dynamic page (one with a name in a bracket like [id].js). Default behaviour is NOT to pre generate the page. This is due to the fact that next.js has no way of knowing how many kinds of page we will need and with what data.
+
+We can tell however next.js, which paths should be pre-generated. I.e ids with ids 1,2,24,500 etc.
+
+We declare it just like getStaticProps
+
+```js
+export const getStaticPaths = async () => {
+    
+}
+```
+
+We can define what pages and with which data should be pre-generated
+
+```js
+export const getStaticPaths = async () => {
+    // tell next.js which instances of this page  should be pre-generated
+    // we need to set fallback. Will throw error without it
+    
+    // Those p1-p3 pages will be pregeneartaed as ISR
+
+    // Also, if we go to a parent site, where we have links to those pages, json files with p1.json p2.json etc will be send to the client for optimisation
+    return {
+        paths: [
+                {params: {id: 'p1'}}, // More params could be defined if theis is nested folder we can define more dynamic params i.e /:offer/:location etc could be defined here as well
+                 {params: {id: 'p2'}},
+                 {params: {id: 'p3'}}
+        ],
+        fallback: false
+    }
+}
+
+```
