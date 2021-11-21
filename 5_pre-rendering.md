@@ -180,3 +180,36 @@ const ProductDetail = (props) => {
 This is similar to useEffect way of fetching data.
 
 we can also set fallback: 'blocking', this will make ssr wait for page to be generated
+
+# fallbacks
+by setting fallback to true. We tell next.js that even if we do not have any pre-rendered pages we may still want to render some page
+
+
+# understanding getServerSideProps for ssr
+
+code that is re-executed after each incoming request.
+We should use eaither getStaticProps or getServerSideProps.
+
+getServerSideProps can only be used on page components and just like other methods of this kind, it needs to be exported with this exact name as async function
+
+## getServerSideProps context
+
+we get access to full request object/response object.  Therefore we could even manipulate headers here.
+
+Those will behave very similar to standard express req res on router paths
+
+```js
+const {params, req, res} = context;
+```
+
+## dynamic pages with getServerSideProps
+
+we cannot use getStaticPath with getServerSideProps.
+As it runs on the server only, and does not pre-generate any data, we simply do not need it and it would not make sense.
+
+Therefore we just use getServerSideProps
+
+
+## getServerSideProps during build
+
+it will not pre-generate anything for those pages. This is marked as a lambda symbol in console.

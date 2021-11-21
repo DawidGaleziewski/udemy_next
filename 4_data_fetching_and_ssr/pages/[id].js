@@ -37,7 +37,7 @@ export const getStaticPaths = async () => {
             ... params
         ],
         // fallback: 'blocking'; // will wait for page to be rendered
-        fallback: true // pospone not defined pages to be generated just in time
+        fallback: true // pospone not defined pages to be generated just in time. 
     }
 }
 
@@ -49,8 +49,11 @@ export const getStaticProps = async (context) => {
 
     const data = await getData();
 
-    const productDetailData = data.products.find(({id})=> id === productId)
+    const productDetailData  = data.products.find(({id})=> id === productId);
 
+    if(!productDetailData){
+        return {notFound: true}
+    }
 
     return {
         props: {
